@@ -1,6 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+# Connects to the server with the private key located at ~/.ssh/school
 
 PRIVATE_KEY="~/.ssh/school"
-SERVER="ubuntu@35.172.230.83"  # Replace with your server's hostname or IP address
+SERVER="35.172.230.83"
 
-ssh -i "$PRIVATE_KEY" "$SERVER"
+ssh -i"$PRIVATE_KEY" "ubuntu@$SERVER"
