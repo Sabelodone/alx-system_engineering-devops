@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+PRIVATE_KEY="~/.ssh/school"
+SERVER="ubuntu@35.172.230.83"  # Replace with your server's hostname or IP address
+
+ssh -i "$PRIVATE_KEY" "$SERVER"
