@@ -1,14 +1,34 @@
 #!/usr/bin/env bash
-# transfer a file from our client to a server
-if [ $# -lt 3 ];
-then
-    echo "Usage: 0-transfer_file PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY";
-    exit;
-fi;
 
-if [ $# -ge 4 ];
-then
-    scp -o StrictHostKeyChecking=no -i "$4" "$1" "$3"@"$2":~/
+# Transfer a file from our client to a server
+if [ "$#" -lt 4 ]; then
+    echo "Usage: $0 PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
+    exit 1
+fi
+
+FILE_PATH="$1"
+IP="$2"
+USERNAME="$3"
+SSH_KEY="$4"
+
+# Check if the file exists
+if [ ! -f "$FILE_PATH" ]; then
+    echo "Error: File $FILE_PATH not found."
+    exit 1
+fi
+
+# Transfer file using SCP
+if [ "$#" -eq 4 ]; then
+    scp -o StrictHostKeyChecking=no -i "$SSH_KEY" "$FILE_PATH" "$USERNAME"@"$IP":~/
 else
-    scp -o StrictHostKeyChecking=no "$1" "$3"@"$2":~/
-fi;
+    echo "Error: Invalid number of arguments."
+    exit 1
+fi
+
+# Check SCP exit status
+if [ $? -eq 0 ]; then
+    echo "File transferred successfully."
+else
+    echo "Error: File transfer failed."
+    exit 1
+fi
