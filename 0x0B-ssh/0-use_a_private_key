@@ -3,6 +3,6 @@
 # Connects to the server with the private key located at ~/.ssh/school
 
 PRIVATE_KEY="~/.ssh/school"
-SERVER="35.172.230.83"
+SERVER="35.172.230.83"  # Replace with your server's IP address
 
 ssh -i"$PRIVATE_KEY" "ubuntu@$SERVER"
