@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
 
-# Set the private key and server IP address
-KEY="~/.ssh/school"
-IP="35.172.230.83"
-
-# Connect to the server using ssh with single-character flags
-ssh -i "$KEY" -o "User=ubuntu" "$IP"
+# using ssh to connect to a server
+ssh ubuntu -i ~/.ssh/school
