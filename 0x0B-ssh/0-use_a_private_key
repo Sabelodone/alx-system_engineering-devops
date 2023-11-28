@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-# using ssh to connect to a server
-ssh ubuntu -i ~/.ssh/school ubuntu@35.172.230.83
+# Connect to the server with the private key located at ~/.ssh/school
+# using single-character flags for SSH command
+
+ssh -i~/.ssh/school ubuntu@35.172.230.83
