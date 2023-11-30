@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
+#  A Script that configures a new Ubuntu machine to Perform a 301-redirection
+# customising a 404 file
 
-# Update Packages and Install Nginx
+# Upadating Packages before Installations
 sudo apt-get update
 sudo apt-get install -y nginx
 
-# Create an index.html page
+# Creating an index.html page
 echo "Hello World!" | sudo tee /var/www/html/index.html
 
 # Performing a 301 Redirection
-string_for_replacement="server_name _;\n\trewrite ^/redirect_me https://github.com/besthor permanent;"
+string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/besthor permanent;"
 sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
 
-# Create a 404 error file
+#creating a 404 error file
 echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
-string_replacement="listen 80 default_server;\n    error_page 404 /404.html;\n    location = /404.html { \n        root /var/www/html; \n        internal; \n    }"
-sudo sed -i "s/listen 80 default_server;/$string_replacement/" /etc/nginx/sites-enabled/default
+string_replacement="listen 80 default_server;\n\terror_file 404 \/404.html;\n\t\tlocation = \/404.html; {\n\troot \/var/www/html;\n\t\tinternal;\n\t}"
 
-# Restart Nginx service after implementing changes
-sudo systemctl restart nginx
+sudo sed -i "s/listen 80 default_server;/$string_replacement/" /etc/nginx/site-enabled/default
+
+# Restarting Nginx service after implementing changes
+sudo service nginx restart
