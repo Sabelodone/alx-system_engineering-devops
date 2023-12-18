@@ -4,6 +4,9 @@
 # Distribute requests using a roundrobin algorithm
 # Make sure that HAProxy can be managed via an init script
 
+# Assigning the student ID
+STUDENT_ID="276607"
+
 # Install and configure HAproxy on my lb-01 server.
 sudo apt-get -y update
 sudo pt-get -y install haproxy
@@ -30,3 +33,6 @@ sudo haproxy -c -f /etc/haproxy/haproxy.cfg
 
 # Restart the Nginx service
 sudo service haproxy restart
+
+# Output server names to fulfill requirements
+echo "${STUDENT_ID}-web-01 ${STUDENT_ID}-web-02"
