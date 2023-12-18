@@ -11,14 +11,14 @@ apt-get -y install haproxy
 # edit config file
 server_config=\
 "
-frontend  Sabelodone_frontend
-        bind *:80
+frontend Sabelodo.com.ng
+        bind *:8080
         mode http
-        default_backend besthor_backend
-backend Sabelodone_backend
+        default_backend Sabelodone.com.ng_backend
+backend Sabelodone.com.ng_backend
         balance roundrobin
-        server 276607-web-01 3.90.85.181 check
-        server 276607-web-02 35.175.104.3 check
+        server 276607-web-01 3.90.85.181:8080 check
+        server 276607-web-02 35.175.104.3:8080 check
 "
 echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
 
