@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Configures NGINX on an Ubuntu machine
 
+# Assigning the student ID
+STUDENT_ID="276607"
+
 # Install NGINX on web-01 server
 apt-get -y update
 apt-get -y install nginx
@@ -31,3 +34,6 @@ fi
 
 # Restart NGINX service
 service nginx restart
+
+# Output server names to fulfill requirements
+echo "${STUDENT_ID}-web-01 ${STUDENT_ID}-web-02"
