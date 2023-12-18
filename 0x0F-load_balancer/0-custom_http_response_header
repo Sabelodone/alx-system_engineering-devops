@@ -1,28 +1,33 @@
 #!/usr/bin/env bash
-# Customizing a 404-error_page
+# Configures NGINX on an Ubuntu machine
 
-# Updating Packages before performing installations
-sudo apt-get update
-sudo apt-get install -y nginx
+# Install NGINX on web-01 server
+apt-get -y update
+apt-get -y install nginx
 
-# Creating an index.html page
-echo "Hello World!" | sudo tee /var/www/html/index.html
+# Add custom response header to know the server name for debugging
+HOST_NAME=$(hostname)
+HEADER="\\\n\tadd_header X-Served-By $HOST_NAME;\n"
+FIND=$(grep "X-Server-by" /etc/nginx/sites-available/default)
+if [[ -z $FIND ]]; then
+	    sed -i "23i $HEADER" /etc/nginx/sites-available/default
+fi
 
-# Performing a "moved permanently redirection" (301)
-new_string="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/Sabelodone permanent;"
-sudo sed -i "s/server_name _;/$new_string/" /etc/nginx/sites-enabled/default
+# Create a first index.html page
+echo "Hello World!" > /var/www/html/index.html
 
-# Creating a 404 Custom error page
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
-new_string="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
+# Remove YouTube redirection and set up a permanent redirection to GitHub
+sed -i '/location \/redirect_me {/,+3d' /etc/nginx/sites-available/default
+REDIRECT="\\\n\tlocation /redirect_me {\n\t\t return 301 https:\/\/github.com\/Sabelodone permanent;\n\t}\n"
+sed -i "42i $REDIRECT" /etc/nginx/sites-available/default
 
-sudo sed -i "s/listen 80 default_server;/$new_string/" /etc/nginx/sites-enabled/default
+# Add a custom 404 error page
+FIND=$(grep "error_page 404" /etc/nginx/sites-available/default)
+ERROR="\\\n\terror_page 404 /custom_404.html;\n"
+if [[ -z $FIND ]]; then
+	    echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
+	        sed -i "40i $ERROR" /etc/nginx/sites-available/default
+fi
 
-# Creating an HTTP response header
-sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-enabled/default
-
-# Testing configurations for syntax errors
-sudo nginx -t
-
-# Restart nginx after implementing changes
-sudo service nginx restart
+# Restart NGINX service
+service nginx restart
