@@ -1,36 +1,24 @@
+#!/usr/bin/python3
+"""
+queries the Reddit API and returns the number
+of subscribers (not active users, total subscribers)
+for a given subreddit. If an invalid subreddit is given,
+the function should return 0.
+"""
 import requests
 
+
 def number_of_subscribers(subreddit):
-    if subreddit is None or not isinstance(subreddit, str):
-        return 0
+    """returns number of total subscribers"""
+    url = ("https://api.reddit.com/r/{}/about".format(subreddit))
+    headers = {'User-Agent': 'CustomClient/1.0'}
+    response = requests.get(url, headers=headers, allow_redirects=False)
 
-    user_agent = {'User-agent': 'Google Chrome Version 81.0.4044.129'}
-    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
+    if response.status_code != 200:
+        return (0)
+    response = response.json()
+    if 'data' in response:
+        return (response.get('data').get('subscribers'))
 
-    try:
-        response = requests.get(url, headers=user_agent, allow_redirects=False)
-        response.raise_for_status()  # Raise an exception for bad requests
-        if response.status_code == 302:
-            print(f"Subreddit '{subreddit}' is a redirect. Returning 0 subscribers.")
-            return 0
-
-        data = response.json()
-        return data.get('data', {}).get('subscribers', 0)
-
-    except requests.exceptions.HTTPError as err:
-        if err.response.status_code == 404:
-            print(f"Subreddit '{subreddit}' not found. Returning 0 subscribers.")
-        else:
-            print(f"Error: {err}")
-
-        return 0
-
-if __name__ == "__main__":
-    import sys
-
-    if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
     else:
-        subreddit_name = sys.argv[1]
-        subscribers_count = number_of_subscribers(subreddit_name)
-        print(f"{subscribers_count}")
+        return (0)
